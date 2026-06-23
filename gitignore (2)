@@ -1,0 +1,74 @@
+# LocalPulse — .gitignore
+# Keeps secrets, junk, and local environment files out of the repo.
+
+# ── Environment & Secrets ────────────────────────── CRITICAL
+# Never commit API keys or database credentials.
+.env
+.env.local
+.env.production
+.env.*
+*.pem
+*.key
+secrets/
+
+# ── Python ────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+.Python
+pip-log.txt
+pip-delete-this-directory.txt
+.venv/
+venv/
+env/
+ENV/
+
+# ── Jupyter Notebooks ─────────────────────────────────────
+.ipynb_checkpoints/
+*.ipynb
+
+# ── Logs ──────────────────────────────────────────────────
+*.log
+logs/
+scraper.log
+
+# ── Database ──────────────────────────────────────────────
+*.sqlite
+*.db
+*.sql.bak
+
+# ── Scraped data (don't commit raw PDFs or HTML dumps) ────
+data/raw/
+data/downloads/
+*.pdf
+scraped/
+
+# ── macOS ─────────────────────────────────────────────────
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+
+# ── VS Code ───────────────────────────────────────────────
+.vscode/
+*.code-workspace
+
+# ── Node (if frontend tooling is added later) ─────────────
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ── Testing ───────────────────────────────────────────────
+.pytest_cache/
+.coverage
+htmlcov/

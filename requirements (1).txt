@@ -1,0 +1,37 @@
+# LocalPulse — Python Dependencies
+# Install with: pip install -r requirements.txt
+
+# ── Web Scraping ──────────────────────────────────────────
+requests==2.31.0              # HTTP requests to government portals
+beautifulsoup4==4.12.3        # HTML parsing and extraction
+lxml==5.1.0                   # Fast HTML/XML parser (used by BeautifulSoup)
+selenium==4.18.1              # For portals that require JavaScript rendering
+webdriver-manager==4.0.1      # Auto-manages ChromeDriver for Selenium
+
+# ── PDF Parsing ───────────────────────────────────────────
+pdfplumber==0.10.3            # Extract text and tables from PDFs
+PyMuPDF==1.23.26              # Fallback PDF parser (faster for large docs)
+pytesseract==0.3.10           # OCR for scanned/image-based PDFs
+
+# ── AI Summarization ──────────────────────────────────────
+anthropic==0.21.3             # Claude API client
+
+# ── Backend API ───────────────────────────────────────────
+fastapi==0.110.0              # Web framework for subscription endpoints
+uvicorn==0.27.1               # ASGI server to run FastAPI
+pydantic==2.6.3               # Data validation for API request/response models
+python-dotenv==1.0.1          # Load environment variables from .env file
+
+# ── Database ──────────────────────────────────────────────
+psycopg2-binary==2.9.9        # PostgreSQL adapter
+sqlalchemy==2.0.28            # ORM for database queries
+
+# ── Email Delivery ────────────────────────────────────────
+resend==0.7.2                 # Resend email API client
+
+# ── Utilities ─────────────────────────────────────────────
+schedule==1.2.1               # Simple Python job scheduler
+pgeocode==0.4.1               # ZIP code to city/state mapping
+python-dateutil==2.9.0        # Date parsing for government document timestamps
+tenacity==8.2.3               # Retry logic for flaky government portals
+loguru==0.7.2                 # Clean logging
