@@ -44,7 +44,7 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],   # Restrict to your domain in production
+    allow_origins=["https://neodragon-tuff.github.io", "http://localhost:3000", "*"],
     allow_methods=["*"],
     allow_headers=["*"],
 )
