@@ -1,36 +1,35 @@
 # LocalPulse — Python Dependencies
-# Install with: pip install -r requirements.txt
 
 # ── Web Scraping ──────────────────────────────────────────
-requests==2.31.0              # HTTP requests to government portals
-beautifulsoup4==4.12.3        # HTML parsing and extraction
-lxml==5.2.2                   # Fast HTML/XML parser
-selenium==4.18.1              # For portals that require JavaScript rendering
-webdriver-manager==4.0.1      # Auto-manages ChromeDriver for Selenium
+requests==2.31.0
+beautifulsoup4==4.12.3
+lxml==5.2.2
+selenium==4.18.1
+webdriver-manager==4.0.1
 
 # ── PDF Parsing ───────────────────────────────────────────
-pdfplumber==0.10.3            # Extract text and tables from PDFs
-pytesseract==0.3.10           # OCR for scanned/image-based PDFs
+pdfplumber==0.10.3
 
 # ── AI Summarization ──────────────────────────────────────
-google-generativeai==0.5.4    # Google Gemini API (free alternative to Claude)
+google-generativeai==0.5.4
 
 # ── Backend API ───────────────────────────────────────────
-fastapi==0.110.0              # Web framework for subscription endpoints
-uvicorn==0.27.1               # ASGI server to run FastAPI
-pydantic==2.6.3               # Data validation
-python-dotenv==1.0.1          # Load environment variables from .env file
+fastapi==0.110.0
+uvicorn==0.27.1
+pydantic==2.4.2
+pydantic-core==2.10.1
+python-dotenv==1.0.1
 
 # ── Database ──────────────────────────────────────────────
-psycopg2-binary==2.9.9        # PostgreSQL adapter
-sqlalchemy==2.0.28            # ORM for database queries
+psycopg2-binary==2.9.9
+sqlalchemy==2.0.28
 
 # ── Email Delivery ────────────────────────────────────────
-resend==0.7.2                 # Resend email API client
+resend==0.7.2
 
 # ── Utilities ─────────────────────────────────────────────
-schedule==1.2.1               # Simple Python job scheduler
-pgeocode==0.4.1               # ZIP code to city/state mapping
-python-dateutil==2.9.0        # Date parsing
-tenacity==8.2.3               # Retry logic for flaky government portals
-loguru==0.7.2                 # Clean logging
+schedule==1.2.1
+pgeocode==0.4.1
+python-dateutil==2.9.0
+tenacity==8.2.3
+loguru==0.7.2
