@@ -848,8 +848,9 @@
       <h1>Your neighborhood, <em>finally legible</em></h1>
       <p class="hero-sub">City hall decisions, zoning changes, permit filings, and local crime reports — all translated into plain English and delivered to your inbox every week.</p>
       <div class="hero-form">
-        <input class="hero-input" type="text" placeholder="Enter your ZIP code" id="hero-zip" maxlength="10" />
-        <button class="btn-primary" onclick="handleSubscribe('hero')">Get my free digest</button>
+        <input class="hero-input" type="email" placeholder="Your email address" id="hero-email" />
+        <input class="hero-input" type="text" placeholder="ZIP code" id="hero-zip" maxlength="5" style="max-width:130px;" />
+        <button class="btn-primary" id="hero-btn" onclick="handleSubscribe('hero')">Get my free digest</button>
       </div>
       <p class="hero-note">
         <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
@@ -1247,7 +1248,7 @@
     <div class="cta-form">
       <input class="cta-input" type="email" placeholder="Your email address" id="cta-email" />
       <input class="cta-input" type="text" placeholder="Your ZIP code" id="cta-zip" maxlength="10" style="max-width:160px;" />
-      <button class="btn-white" onclick="handleSubscribe('cta')">Get my free digest</button>
+      <button class="btn-white" id="cta-btn" onclick="handleSubscribe('cta')">Get my free digest</button>
     </div>
   </div>
 </div>
@@ -1310,31 +1311,87 @@
 </div>
 
 <script>
-  function showToast(msg) {
+  const API_URL = 'https://localpulse-api-lxf9.onrender.com';
+
+  function showToast(msg, isError) {
     const t = document.getElementById('toast');
+    const icon = document.getElementById('toast-icon');
     document.getElementById('toast-msg').textContent = msg;
+    t.style.background = isError ? '#7A1A1A' : '#0E0F0D';
     t.classList.add('show');
-    setTimeout(() => t.classList.remove('show'), 4000);
+    setTimeout(() => t.classList.remove('show'), 5000);
   }
 
-  function handleSubscribe(source) {
+  function setLoading(btnId, loading) {
+    const btn = document.getElementById(btnId);
+    if (!btn) return;
+    btn.disabled = loading;
+    btn.textContent = loading ? 'Subscribing...' : btn.dataset.original;
+  }
+
+  async function subscribe(email, zip) {
+    const res = await fetch(`${API_URL}/subscribe`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, zip_code: zip })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.detail || 'Something went wrong.');
+    return data;
+  }
+
+  async function handleSubscribe(source) {
     if (source === 'hero') {
-      const zip = document.getElementById('hero-zip').value.trim();
-      if (!zip) { showToast('Please enter your ZIP code first.'); return; }
-      if (!/^\d{5}(-\d{4})?$/.test(zip)) { showToast('Please enter a valid 5-digit ZIP code.'); return; }
-      document.getElementById('hero-zip').value = '';
-      showToast('You\'re in! First digest for ZIP ' + zip + ' lands this Monday.');
+      const emailEl = document.getElementById('hero-email');
+      const zipEl   = document.getElementById('hero-zip');
+      const email   = emailEl.value.trim();
+      const zip     = zipEl.value.trim();
+
+      if (!email) { showToast('Please enter your email address.', true); return; }
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { showToast('Please enter a valid email address.', true); return; }
+      if (!zip || !/^\d{5}$/.test(zip)) { showToast('Please enter a valid 5-digit ZIP code.', true); return; }
+
+      setLoading('hero-btn', true);
+      try {
+        await subscribe(email, zip);
+        emailEl.value = '';
+        zipEl.value = '';
+        showToast('You\'re in! First digest for ZIP ' + zip + ' lands this Monday.', false);
+      } catch(e) {
+        showToast(e.message, true);
+      } finally {
+        setLoading('hero-btn', false);
+      }
+
     } else {
       const email = document.getElementById('cta-email').value.trim();
-      const zip = document.getElementById('cta-zip').value.trim();
-      if (!email || !zip) { showToast('Please fill in both your email and ZIP code.'); return; }
-      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { showToast('Please enter a valid email address.'); return; }
-      if (!/^\d{5}(-\d{4})?$/.test(zip)) { showToast('Please enter a valid 5-digit ZIP code.'); return; }
-      document.getElementById('cta-email').value = '';
-      document.getElementById('cta-zip').value = '';
-      showToast('You\'re subscribed! First digest for ' + zip + ' lands Monday.');
+      const zip   = document.getElementById('cta-zip').value.trim();
+
+      if (!email || !zip) { showToast('Please fill in both your email and ZIP code.', true); return; }
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { showToast('Please enter a valid email address.', true); return; }
+      if (!/^\d{5}$/.test(zip)) { showToast('Please enter a valid 5-digit ZIP code.', true); return; }
+
+      setLoading('cta-btn', true);
+      try {
+        await subscribe(email, zip);
+        document.getElementById('cta-email').value = '';
+        document.getElementById('cta-zip').value = '';
+        showToast('You\'re subscribed! First digest for ZIP ' + zip + ' lands Monday.', false);
+      } catch(e) {
+        showToast(e.message, true);
+      } finally {
+        setLoading('cta-btn', false);
+      }
     }
   }
+
+  // Save original button text for reset after loading
+  window.addEventListener('DOMContentLoaded', () => {
+    ['hero-btn','cta-btn'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.dataset.original = el.textContent;
+    });
+  });
 
   document.getElementById('hero-zip').addEventListener('keydown', function(e) {
     if (e.key === 'Enter') handleSubscribe('hero');
